@@ -19,11 +19,8 @@
       (exp (+ a b) c))))
 
 (defn- normalize [repertoire]
-  (let [fraction-sum
-          (reduce + (for [subpopulation repertoire] (:fraction subpopulation)))
-        normalize-fraction
-          (fn [fraction]
-            (/ fraction fraction-sum))
+  (let [fraction-sum (reduce + (map :fraction repertoire))
+        normalize-fraction (fn [fraction] (/ fraction fraction-sum))
         normalize-subpopulation
           (fn [subpopulation]
             (update-in subpopulation [:fraction] normalize-fraction))]
@@ -61,7 +58,7 @@
     (map cdr-fraction cdrs)))
 
 (defn build-complete-repertoire [vdj-count cdr-count]
-  (let [population-function (power-law-building-function 2.0 1 100000)
+  (let [population-function (power-law-building-function 2.0 0.0 1.0)
         initial-population (for [vdj (range vdj-count)
                                  cdr (range cdr-count)]
                              {:vdj vdj
