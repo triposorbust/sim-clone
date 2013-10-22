@@ -7,10 +7,14 @@
         [clojure.java.io]))
 
 (defn print-statistics [statistics-map]
-  (do (println (clojure.string/join ","
-                (map #(% statistics-map) [:vdj-entr :cdr-entr :tot-entr
-                                          :vdj-norm :cdr-norm :tot-norm])))
-      (flush)))
+  (let [entrs (map      #(% statistics-map)  [:vdj-entr :cdr-entr :tot-entr])
+        norms (map      #(% statistics-map)  [:vdj-norm :cdr-norm :tot-norm])
+        clons (map #(- 1 (% statistics-map)) [:vdj-norm :cdr-norm :tot-norm])]
+    (do (print (clojure.string/join "," entrs))
+        (print (clojure.string/join "," norms))
+        (print (clojure.string/join "," clons))
+        (newline)
+        (flush))))
 
 (defn compute-statistics [repertoire]
   {:vdj-entr (inf/shannon-entropy (rep/vdj-composition repertoire))
@@ -27,7 +31,8 @@
         update-function #(rep/expand-clones % selector)
         termination-function #(>= (rep/subgroup-fraction % selector) max-fraction)]
     (println (clojure.string/join "," ["VDJ-entr" "CDR-entr" "TOT-entr"
-                                       "VDJ-norm" "CDR-norm" "TOT-norm"]))
+                                       "VDJ-norm" "CDR-norm" "TOT-norm"
+                                       "VDJ-clon" "CDR-clon" "TOT-clon"]))
     (flush)
     (loop [r repertoire g 1]
       (if (or (> g generations) (termination-function r))
