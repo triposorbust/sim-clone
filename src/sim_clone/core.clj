@@ -21,8 +21,8 @@
         repertoire (rep/build-initial-repertoire x-dim y-dim space)
         selector (rep/make-subgroup-selector (rep/choose-clones number repertoire))
         update-function #(rep/expand-clones % selector)
-        termination-function #(>= (rep/subgroup-fraction % selector))]
-    (loop [r repertoire, g 1]
+        termination-function #(>= (rep/subgroup-fraction % selector) max-fraction)]
+    (loop [r repertoire g 1]
       (if (or (> g generations) (termination-function r))
         (print-statistics (compute-statistics r))
         (do (print-statistics (compute-statistics r))
@@ -32,12 +32,12 @@
   (cli args
        "Runs a simulation of clonal expansion on TCR repertoire."
        ["-h" "--help" "Prints the help banner." :default false :flag true]
-       ["-x" "--x-dim" "Size VDJ space." :default 2000 :parse-fn #(int %)]
-       ["-y" "--y-dim" "Size CDR space." :default 15000 :parse-fn #(int %)]
-       ["-s" "--space" "Size to cover." :default 25000 :parse-fn #(int %)]
-       ["-m" "--max-fraction" "Exit cond." :default 0.20 :parse-fn #(double %)]
-       ["-g" "--generations" "Upper limit." :default 1000 :parse-fn #(int %)]
-       ["-n" "--number" "Clones to expand." :default 1 :parse-fn #(int %)]))
+       ["-x" "--x-dim" "Size VDJ space." :default 100 :parse-fn #(Integer. %)]
+       ["-y" "--y-dim" "Size CDR space." :default 1000 :parse-fn #(Integer. %)]
+       ["-s" "--space" "Size to cover." :default 10000 :parse-fn #(Integer. %)]
+       ["-m" "--max-fraction" "Exit cond." :default 0.20 :parse-fn #(Double. %)]
+       ["-g" "--generations" "Upper limit." :default 250 :parse-fn #(Integer. %)]
+       ["-n" "--number" "Clones to expand." :default 1 :parse-fn #(Integer. %)]))
 
 (defn -main [& args]
   (let [[options args banner] (parse-args args)]

@@ -11,8 +11,7 @@
     (reduce + (map #(apply * %&) ps sis))))
 
 (defn max-shannon-entropy [n]
-  (let [ps (take n (repeat (/ 1 n)))]
-    (shannon-entropy ps)))
+  (log2 n))
 
 (defn normalized-entropy [ps]
   (let [entropy (shannon-entropy ps)

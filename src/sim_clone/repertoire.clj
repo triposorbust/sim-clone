@@ -47,14 +47,14 @@
     (reduce + (map :fraction subgroup))))
 
 (defn vdj-composition [repertoire]
-  (let [vdjs (sorted-set (map :vdj repertoire))
+  (let [vdjs (apply sorted-set (map :vdj repertoire))
         vdj-fraction (fn [vdj]
                        (subgroup-fraction repertoire
                                           (make-key-value-selector :vdj vdj)))]
     (map vdj-fraction vdjs)))
 
 (defn cdr-composition [repertoire]
-  (let [cdrs (sorted-set (map :cdr repertoire))
+  (let [cdrs (apply sorted-set (map :cdr repertoire))
         cdr-fraction (fn [cdr]
                        (subgroup-fraction repertoire
                                           (make-key-value-selector :cdr cdr)))]
@@ -72,7 +72,9 @@
 (defn build-initial-repertoire [vdj-count cdr-count number-of-combinations]
   (->> (build-complete-repertoire vdj-count cdr-count)
        (sort-by :fraction)
-       (take number-of-combinations)))
+       (reverse)
+       (take number-of-combinations)
+       (normalize)))
 
 (defn choose-clones [n repertoire]
   (take n (shuffle repertoire)))
