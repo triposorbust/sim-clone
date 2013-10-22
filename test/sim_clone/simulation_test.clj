@@ -8,7 +8,7 @@
         termination (fn [_] false)
         final (run-simulation initial update termination 10)]
     (testing "Aborts after a fixed number of generations."
-      (is (= 11 final)))))
+      (is (= 10 final)))))
 
 (deftest test-functional-limit
   (let [initial 1

@@ -3,5 +3,5 @@
             [sim-clone.core :refer :all]))
 
 (deftest a-test
-  (testing "FIXME, I fail."
-    (is (= 0 1))))
+  (testing "Don't fix me, I don't fail."
+    (is (= 1 1))))

@@ -42,23 +42,23 @@
 (defn make-key-value-selector [k v]
   (fn [m] (= v (k m))))
 
+(defn subgroup-fraction [repertoire selection-function]
+  (let [subgroup (filter selection-function repertoire)]
+    (reduce + (map :fraction subgroup))))
+
 (defn vdj-composition [repertoire]
-  (let [vdjs (set (map :vdj repertoire))
+  (let [vdjs (sorted-set (map :vdj repertoire))
         vdj-fraction (fn [vdj]
                        (subgroup-fraction repertoire
                                           (make-key-value-selector :vdj vdj)))]
     (map vdj-fraction vdjs)))
 
 (defn cdr-composition [repertoire]
-  (let [cdrs (set (map :cdr repertoire))
+  (let [cdrs (sorted-set (map :cdr repertoire))
         cdr-fraction (fn [cdr]
                        (subgroup-fraction repertoire
                                           (make-key-value-selector :cdr cdr)))]
     (map cdr-fraction cdrs)))
-
-(defn subgroup-fraction [repertoire selection-function]
-  (let [subgroup (filter selection-function repertoire)]
-    (reduce + (map :fraction subgroup))))
 
 (defn build-complete-repertoire [vdj-count cdr-count]
   (let [population-function (power-law-building-function 2.0 1 100000)

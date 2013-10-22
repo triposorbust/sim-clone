@@ -29,4 +29,44 @@
     (testing "Check that we can limit the repertoire size."
       (is (= (count repertoire) 10)))))
 
+(deftest test-subgroup-selector
+  (let [repertoire (for [vdj (range 3) cdr (range 3)] {:vdj vdj :cdr cdr})
+        selector (make-subgroup-selector [{:vdj 2 :cdr 1} {:vdj 1 :cdr 2}])
+        selected (set (filter selector repertoire))]
+    (testing "Ensure that the correct number of elements are chosen."
+      (is (= 2 (count selected))))
+    (testing "Both elements are correct/present."
+      (is (contains? selected {:vdj 2 :cdr 1}))
+      (is (contains? selected {:vdj 1 :cdr 2})))))
 
+(deftest test-key-value-selector
+  (let [repertoire (for [vdj (range 4) cdr (range 4) :when (<= vdj cdr)]
+                     {:vdj vdj :cdr cdr :fraction nil})
+        vdj-zeroes (filter (make-key-value-selector :vdj 0) repertoire)
+        vdj-threes (filter (make-key-value-selector :vdj 3) repertoire)
+        cdr-ones   (filter (make-key-value-selector :cdr 1) repertoire)
+        cdr-twos   (filter (make-key-value-selector :cdr 2) repertoire)]
+    (testing "Correct number of elements selected."
+      (is (= 4 (count vdj-zeroes)))
+      (is (= 1 (count vdj-threes)))
+      (is (= 2 (count cdr-ones)))
+      (is (= 3 (count cdr-twos))))
+    (testing "Selections meet criteria."
+      (is (every? #(= 0 (:vdj %)) vdj-zeroes))
+      (is (every? #(= 3 (:vdj %)) vdj-threes))
+      (is (every? #(= 1 (:cdr %)) cdr-ones))
+      (is (every? #(= 2 (:cdr %)) cdr-twos)))))
+
+(deftest test-vdj-composition
+  (let [repertoire (for [vdj (range 3) cdr (range 3)]
+                     {:vdj vdj :cdr cdr :fraction (+ (* vdj vdj) (inc cdr))})
+        composition (vdj-composition repertoire)]
+    (testing "Aggregates by :vdj and computes composition fractions."
+      (is [6 9 18] composition))))
+
+(deftest test-cdr-composition
+  (let [repertoire (for [vdj (range 3) cdr (range 3)]
+                     {:vdj vdj :cdr cdr :fraction (* (inc vdj) (inc cdr))})
+        composition (cdr-composition repertoire)]
+    (testing "Aggregates by :cdr and computes composition fractions."
+      (is [8 11 14] composition))))
