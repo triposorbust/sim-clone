@@ -2,13 +2,6 @@
   (:require [clojure.test :refer :all]
             [sim-clone.information :refer :all]))
 
-(deftest test-log2
-  (testing "Base 2 logarithm should be well defined."
-    (is (= 1.0 (log2 2)))
-    (is (= 5.0 (log2 32)))
-    (is (let [val (log2 3)]
-          (< 1 val 2)))))
-
 (deftest test-self-information
   (testing "Self-information should be -log(p)."
     (is (= 1.0 (self-information 0.5)))

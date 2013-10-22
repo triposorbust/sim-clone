@@ -1,6 +1,6 @@
 (ns sim-clone.information)
 
-(defn log2 [n]
+(defn- log2 [n]
   (/ (Math/log n) (Math/log 2)))
 
 (defn self-information [p]
@@ -8,7 +8,7 @@
 
 (defn shannon-entropy [ps]
   (let [sis (map self-information ps)]
-    (apply + (map #(apply * %&) ps sis))))
+    (reduce + (map #(apply * %&) ps sis))))
 
 (defn max-shannon-entropy [n]
   (let [ps (take n (repeat (/ 1 n)))]
