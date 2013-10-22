@@ -7,14 +7,14 @@
         [clojure.java.io]))
 
 (defn print-statistics [statistics-map]
-  (do (doseq [k [:vdj-norm :cdr-norm :tot-norm]]
+  (do (doseq [k [:vdj-entr :cdr-entr :tot-entr]]
         (printf "%f\t" (k statistics-map)))
       (newline)))
 
 (defn compute-statistics [repertoire]
-  {:vdj-norm (inf/normalized-entropy (rep/vdj-composition repertoire))
-   :cdr-norm (inf/normalized-entropy (rep/cdr-composition repertoire))
-   :tot-norm (inf/normalized-entropy (rep/composition repertoire))})
+  {:vdj-entr (inf/shannon-entropy (rep/vdj-composition repertoire))
+   :cdr-entr (inf/shannon-entropy (rep/cdr-composition repertoire))
+   :tot-entr (inf/shannon-entropy (rep/composition repertoire))})
 
 (defn run-with [options]
   (let [{:keys [x-dim y-dim space number max-fraction generations]} options
