@@ -29,8 +29,39 @@
             (update-in subpopulation [:fraction] normalize-fraction))]
     (map normalize-subpopulation repertoire)))
 
-(defn build-initial-repertoire [vdj-count cdr-count]
-  (let [population-function (power-law-building-function 2.0 1 10000)
+(defn- make-xy-selector [maps-to-match x-key y-key]
+  (let [xys (set (for [m maps-to-match :let [x (x-key m) y (y-key m)]] [x y]))]
+    (fn [m]
+      (let [x (x-key m)
+            y (y-key m)]
+        (contains? xys [x y])))))
+
+(defn make-subgroup-selector [subgroup]
+  (make-xy-selector subgroup :vdj :cdr))
+
+(defn make-key-value-selector [k v]
+  (fn [m] (= v (k m))))
+
+(defn vdj-composition [repertoire]
+  (let [vdjs (set (map :vdj repertoire))
+        vdj-fraction (fn [vdj]
+                       (subgroup-fraction repertoire
+                                          (make-key-value-selector :vdj vdj)))]
+    (map vdj-fraction vdjs)))
+
+(defn cdr-composition [repertoire]
+  (let [cdrs (set (map :cdr repertoire))
+        cdr-fraction (fn [cdr]
+                       (subgroup-fraction repertoire
+                                          (make-key-value-selector :cdr cdr)))]
+    (map cdr-fraction cdrs)))
+
+(defn subgroup-fraction [repertoire selection-function]
+  (let [subgroup (filter selection-function repertoire)]
+    (reduce + (map :fraction subgroup))))
+
+(defn build-complete-repertoire [vdj-count cdr-count]
+  (let [population-function (power-law-building-function 2.0 1 100000)
         initial-population (for [vdj (range vdj-count)
                                  cdr (range cdr-count)]
                              {:vdj vdj
@@ -38,7 +69,12 @@
                               :fraction (population-function (rand))})]
     (normalize initial-population)))
 
-(defn select-clones [n repertoire]
+(defn build-initial-repertoire [vdj-count cdr-count number-of-combinations]
+  (->> (build-complete-repertoire vdj-count cdr-count)
+       (sort-by :fraction)
+       (take number-of-combinations)))
+
+(defn choose-clones [n repertoire]
   (take n (shuffle repertoire)))
 
 (defn expand-clones [repertoire selection-function]
@@ -50,5 +86,4 @@
     (normalize (map update-subpopulation repertoire))))
 
 (defn composition [repertoire]
-  (let [normalized-repertoire (normalize repertoire)]
-    (for [subpopulation normalized-repertoire] (:fraction subpopulation))))
+  (map :fraction (normalize repertoire)))

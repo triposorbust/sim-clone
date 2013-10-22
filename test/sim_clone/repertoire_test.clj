@@ -20,6 +20,13 @@
       (is (= [0.4 0.2 0.4] (composition expanded))))))
 
 (deftest test-repertoire-construction
-  (let [repertoire (build-initial-repertoire 7 5)]
+  (let [repertoire (build-complete-repertoire 7 5)]
     (testing "Check that the initial repertoire is the right size."
       (is (= (count repertoire) 35)))))
+
+(deftest test-repertoire-initialization
+  (let [repertoire (build-initial-repertoire 7 5 10)]
+    (testing "Check that we can limit the repertoire size."
+      (is (= (count repertoire) 10)))))
+
+
