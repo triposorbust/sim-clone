@@ -9,7 +9,8 @@
 (defn print-statistics [statistics-map]
   (do (doseq [k [:vdj-entr :cdr-entr :tot-entr]]
         (printf "%f\t" (k statistics-map)))
-      (newline)))
+      (newline)
+      (flush)))
 
 (defn compute-statistics [repertoire]
   {:vdj-entr (inf/shannon-entropy (rep/vdj-composition repertoire))

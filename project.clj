@@ -2,6 +2,7 @@
   :description "Engine for simulating clonal expansion in TCR repertoire."
   :url "https://github.com/triposorbust/sim-clone/"
   :main sim-clone.core
+  :aot :all
   :test-path "test"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
