@@ -54,7 +54,7 @@ Ran 14 tests containing 29 assertions.
 
 ### License
 
-Copyright © 2013 FIXME
+Copyright &copy; 2013 [Andy Chiang][ahc].
 
 Distributed under the Eclipse Public License either version 1.0 or (at
 your option) any later version.
