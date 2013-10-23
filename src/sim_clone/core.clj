@@ -10,9 +10,9 @@
   (let [entrs (map      #(% statistics-map)  [:vdj-entr :cdr-entr :tot-entr])
         norms (map      #(% statistics-map)  [:vdj-norm :cdr-norm :tot-norm])
         clons (map #(- 1 (% statistics-map)) [:vdj-norm :cdr-norm :tot-norm])]
-    (do (print (clojure.string/join "," entrs))
-        (print (clojure.string/join "," norms))
-        (print (clojure.string/join "," clons))
+    (do (print (str (clojure.string/join "," entrs) ","))
+        (print (str (clojure.string/join "," norms) ","))
+        (print (str (clojure.string/join "," clons)))
         (newline)
         (flush))))
 
