@@ -66,7 +66,7 @@
 
 (deftest test-cdr-composition
   (let [repertoire (for [vdj (range 3) cdr (range 3)]
-                     {:vdj vdj :cdr cdr :fraction (* (inc vdj) (inc cdr))})
+                     {:vdj vdj :cdr cdr :fraction (+ (* vdj vdj) (inc cdr))})
         composition (cdr-composition repertoire)]
     (testing "Aggregates by :cdr and computes composition fractions."
       (is [8 11 14] composition))))
