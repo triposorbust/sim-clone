@@ -1,4 +1,4 @@
-# Sim-Clone: Simulating Clonal Expansion
+# Simulating Clonal Expansion
 ## Start the day right with simulations!
 
 A Clojure application for simulating clonal expansion in cellular/molecular repertoire. Intended for use with some metrics.
